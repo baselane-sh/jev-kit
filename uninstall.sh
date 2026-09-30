@@ -51,7 +51,22 @@ rm -rf "$CLAUDE_DIR/plugins/fast-jev-compaction"
 rm -rf "$CLAUDE_DIR/skills/jev-explore" "$CLAUDE_DIR/skills/adversarial-loop" "$CLAUDE_DIR/skills/jev-browser-check" "$CLAUDE_DIR/skills/jev-spec-check"
 rm -f "$CLAUDE_DIR/agents/adversarial-reviewer.md" "$CLAUDE_DIR/agents/fixer.md"
 
-say "Removed hooks, plugin and skills."
+LOCAL="$CLAUDE_DIR/settings.local.json"
+if [ -f "$LOCAL" ]; then
+  TMP="$(mktemp)"
+  if jq '
+    del(.extraKnownMarketplaces["fast-jev-compaction"])
+    | del(.enabledPlugins["fast-jev-compaction@fast-jev-compaction"])
+    | if .extraKnownMarketplaces == {} then del(.extraKnownMarketplaces) else . end
+    | if .enabledPlugins == {} then del(.enabledPlugins) else . end
+    ' "$LOCAL" > "$TMP" 2>/dev/null && jq empty "$TMP" >/dev/null 2>&1; then
+    cat "$TMP" > "$LOCAL"
+    say "Unregistered the compaction plugin from $LOCAL"
+  fi
+  rm -f "$TMP"
+fi
+
+say "Removed hooks, agents, plugin and skills."
 say "Left in place (delete by hand if you want them gone too):"
 say "  - $CLAUDE_DIR/jev-rules.json"
 say "  - $CLAUDE_DIR/jev-spec.json"
