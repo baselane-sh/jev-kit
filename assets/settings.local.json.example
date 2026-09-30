@@ -1,0 +1,19 @@
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_FUNCTION_HOOKS": "1",
+    "TYPESAFE_BASE_URL": "https://ai-gateway.vercel.sh/typesafe",
+    "TYPESAFE_API_KEY": "<your Vercel AI Gateway key>",
+    "AI_GATEWAY_API_KEY": "<your Vercel AI Gateway key>"
+  },
+  "extraKnownMarketplaces": {
+    "fast-jev-compaction": {
+      "source": {
+        "source": "directory",
+        "path": "<ABSOLUTE path to your project>/.claude/plugins/fast-jev-compaction"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "fast-jev-compaction@fast-jev-compaction": true
+  }
+}

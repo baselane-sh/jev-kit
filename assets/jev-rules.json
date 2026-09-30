@@ -1,0 +1,31 @@
+{
+  "_about": "Hard rules that jev-rules.py checks before every edit or commit. 'on' is 'edit' or 'commit'. 'paths' (edit rules only) is a regex on the edited file's path relative to the project root; omit it to apply to every file. 'source' is where the rule came from; it's quoted when an edit is blocked. Keep the wording close to the source. These are examples: replace them with your own rules from CLAUDE.md or your specs.",
+  "rules": [
+    {
+      "id": "no-hardcoded-secrets",
+      "on": "edit",
+      "rule": "Never hardcode secrets: no API keys, tokens, passwords or private keys in source files. Read them from environment variables.",
+      "source": "CLAUDE.md"
+    },
+    {
+      "id": "no-db-from-frontend",
+      "on": "edit",
+      "paths": "(^|/)(components|pages|app|views|client|frontend|web)/",
+      "rule": "Frontend code never talks to the database directly (no database clients, SQL, or direct table reads or writes from the browser). All data goes through the backend API.",
+      "source": "CLAUDE.md"
+    },
+    {
+      "id": "authz-on-server",
+      "on": "edit",
+      "paths": "(^|/)(routes?|routers?|controllers?|api|handlers?)/",
+      "rule": "Every endpoint that reads or changes user data checks on the server that the caller is allowed to, and never trusts a user ID or role sent by the client.",
+      "source": "CLAUDE.md"
+    },
+    {
+      "id": "no-secrets-staged",
+      "on": "commit",
+      "rule": "No secrets may be committed: no .env files, no real API keys, passwords or service keys. .env.example files hold placeholders only.",
+      "source": "CLAUDE.md"
+    }
+  ]
+}

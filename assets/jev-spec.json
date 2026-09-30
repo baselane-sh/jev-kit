@@ -1,0 +1,9 @@
+{
+  "_about": "Spec docs that jev-spec-check judges for test coverage. 'spec' is a markdown file; every list item and table row in it is one rule. 'watch' is a regex on edited paths: editing a matching file (or the spec itself) triggers jev-spec-hook.py. 'tests' is a regex that picks test files (the default covers tests/, __tests__/, *.test.*, *.spec.*, test_*.py). Replace the example below with your own.",
+  "specs": [
+    {
+      "spec": "docs/PERMISSIONS.md",
+      "watch": "(^|/)(routes?|routers?|controllers?|api|middleware|auth)/"
+    }
+  ]
+}
