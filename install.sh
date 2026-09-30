@@ -35,7 +35,7 @@ if ! command -v jq >/dev/null 2>&1; then
   say "  macOS:   brew install jq"
   say "  Debian:  sudo apt-get install -y jq"
   say ""
-  say "No jq? Merge settings.snippet.json into .claude/settings.json by hand."
+  say "No jq? Merge assets/settings.json into .claude/settings.json by hand."
   exit 1
 fi
 if ! command -v python3 >/dev/null 2>&1; then
@@ -142,7 +142,7 @@ done
 
 say ""
 if [ -z "${AI_GATEWAY_API_KEY:-}" ] && [ -t 0 ]; then
-  say "Jev runs through Vercel AI Gateway (or OpenRouter)."
+  say "Jev runs through Vercel AI Gateway."
   say "Create a credential at: https://vercel.com/dashboard -> your project -> AI Gateway -> API Keys"
   printf "Paste it now (or press Enter to skip): "
   read -r USER_CRED || USER_CRED=""
@@ -182,7 +182,7 @@ say ""
 say "Next steps:"
 say "  1. Edit .claude/jev-rules.json and .claude/jev-spec.json for this project"
 say "  2. Restart Claude Code (or start a new session) to load the changes"
-say "  3. Check: bash $SRC_DIR/tests/run.sh"
+say "  3. Check the wiring (offline): python3 $HOOKS_DIR/test_jev_hooks.py"
 say "  4. To undo everything: bash $SRC_DIR/uninstall.sh"
 say ""
 say "To restore the previous settings.json: cp \"$BACKUP\" \"$SETTINGS\""

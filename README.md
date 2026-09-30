@@ -1,8 +1,8 @@
 # jev-kit
 
 One-shot installer for a set of Claude Code hooks, skills and agents built on
-[TypeSafe's](https://vercel.com) Jev decision model, served through Vercel AI
-Gateway (or OpenRouter). Drop it into any project's `.claude/` folder.
+TypeSafe's Jev decision model, served through Vercel AI Gateway. Drop it into
+any project's `.claude/` folder.
 
 ## What it installs
 
@@ -16,6 +16,8 @@ Gateway (or OpenRouter). Drop it into any project's `.claude/` folder.
 - **`skills/jev-explore`** — faster file search (keyword filter + ranking)
 - **`skills/adversarial-loop`** — cheap risk triage before a full code review,
   backed by `agents/adversarial-reviewer.md` and `agents/fixer.md`
+- **`skills/jev-spec-check`** — judges which spec rules have tests (used by
+  the spec hook, or run on demand with `/jev-spec-check`)
 - **`skills/jev-browser-check`** — Playwright + Jev click-picker for browser QA
 - **`plugins/fast-jev-compaction`** — replaces `/compact` with Jev-guided
   compaction
@@ -38,13 +40,17 @@ It will:
 3. Merge the hook wiring into `.claude/settings.json` (idempotent — safe to
    re-run, it replaces its own entries instead of duplicating them)
 4. Register the compaction plugin in `.claude/settings.local.json`
-5. Prompt for a Vercel AI Gateway (or OpenRouter) API key, save it locally
+5. Prompt for a Vercel AI Gateway API key, save it locally
    (`chmod 600`, gitignored) — or skip, since every hook fails open anyway
 6. Add `.claude/settings.local.json` and `.claude/.playwright/` to
    `.gitignore`
 
 Requires `jq` and `python3` (stdlib only). Restart Claude Code (or start a new
-session) after installing.
+session) after installing, then check the wiring offline (no key or network
+needed):
+```bash
+python3 .claude/hooks/test_jev_hooks.py
+```
 
 ## Uninstall
 
@@ -53,9 +59,10 @@ bash /tmp/jev-kit/uninstall.sh
 ```
 
 Removes only what the installer added: the hook entries in
-`settings.json`, the hook scripts, the skills, and the compaction plugin.
-Leaves your customized `jev-rules.json`, `jev-spec.json` and
-`settings.local.json` in place — delete those by hand if you want them gone
+`settings.json`, the hook scripts, the skills, the agents, and the compaction
+plugin and its registration in `settings.local.json`. Leaves your customized
+`jev-rules.json`, `jev-spec.json` and the rest of `settings.local.json`
+(including your key) in place — delete those by hand if you want them gone
 too.
 
 ## Configure
@@ -65,8 +72,11 @@ too.
 - `.claude/jev-spec.json` — points at spec docs and the code paths they cover,
   so the spec hook knows what to check for test coverage.
 
-Tuning env vars (set in `.claude/settings.local.json` → `env`):
-`JEV_TIMEOUT` (3s), `JEV_LOG`, `JEV_SKILL_THRESHOLD` (0.6),
+Env vars (set in `.claude/settings.local.json` → `env`):
+`AI_GATEWAY_API_KEY` (hooks and skills) and `TYPESAFE_API_KEY` /
+`TYPESAFE_BASE_URL` (compaction plugin) — the installer sets all three.
+
+Tuning: `JEV_URL`, `JEV_TIMEOUT` (3s), `JEV_LOG`, `JEV_SKILL_THRESHOLD` (0.6),
 `JEV_RULES_BLOCK` / `JEV_RULES_WARN` (0.8 / 0.5), `JEV_TRIAGE_LOW` (0.2),
 `JEV_EXPLORE_EXT`, `JEV_BASE_URL` / `JEV_LOGIN_PATH`, `JEV_PARALLEL` (4),
 `JEV_RETRIES` (0), `JEV_MODEL` (`typesafe-ai/jev`).

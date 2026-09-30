@@ -97,9 +97,9 @@ brittle the moment a button moves or gets renamed. I wanted something that
 could look at a page the way I do: find the "submit" button by what it says
 and where it is, not by a selector that breaks on the next redesign.
 
-This skill pairs Playwright with Jev as a click-picker. Given a screenshot
-and a goal, it identifies the right element in terms a human would use, and
-the automation clicks it. It's not a full self-driving test suite. It's the
+This skill pairs Playwright with Jev as a click-picker. Given the page's
+visible text, its clickable elements by label, and a goal, it picks the right
+element the way a human would, by what it says, and the automation clicks it. It's not a full self-driving test suite. It's the
 difference between a script that dies on a CSS class change and one that
 survives it.
 
@@ -113,9 +113,10 @@ already vetoed because the veto didn't survive compaction.
 
 This plugin replaces the default `/compact` with something that keeps
 decisions and constraints verbatim instead of paraphrasing them, and uses Jev
-to decide what's safe to compress versus what has to stay exact. It runs
-continuously in the background rather than as one big cliff-edge event, so
-there's no single moment where the session's memory takes a hit.
+to decide what's safe to compress versus what has to stay exact. It also
+kicks in on its own once the context is 60% full, well before the hard limit,
+so compaction happens early and in smaller steps instead of as one cliff-edge
+event at the end.
 
 ## Why probabilities instead of another prompt
 
